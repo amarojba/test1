@@ -1,0 +1,477 @@
+import pandas as pd
+import numpy as np
+
+dfa=pd.read_csv('stock_prices.csv')
+dfa.head()
+
+#first and last business days of the month
+pd.date_range('1/1/2020', '12/31/2020', freq='BMS')
+a=pd.date_range('12/1/2019', '12/31/2020', freq='BM')
+    
+dfa2=dfa
+maxValuesObj = pd.DataFrame({'max': dfa.max(axis=1)})
+maxValuesObj
+dfa2 = dfa.assign(max=maxValuesObj)
+
+
+#Creating dfa9, a dataset with stock prices + columns with highest, second highest and third highest prices + columns with their stock names
+
+dfa3=dfa2.drop(['Date'], axis = 1)
+maxcol=dfa3.idxmax(axis=1)
+dfa4=dfa3.assign(maxcolu=maxcol)
+dfa5=dfa2.assign(maxcolu=maxcol)
+segcol=dfa3.apply(lambda row: row.nlargest(3).values[-1],axis=1)
+dfa6=dfa5.assign(segcolu=segcol)
+tercol=dfa3.apply(lambda row: row.nlargest(4).values[-1],axis=1)
+dfa7=dfa6.assign(tercolu=tercol)
+segcoluname=dfa3.T.apply(lambda x: x.nlargest(3).idxmin())
+segcoluname
+dfa8=dfa7.assign(segcolumna=segcoluname)
+tercoluname=dfa3.T.apply(lambda x: x.nlargest(4).idxmin())
+dfa9=dfa8.assign(tercolumna=tercoluname)
+
+#Using end dates of month, creating dfus2, a dataframe with highest, second highest and third highest stock names for each date.
+
+filtered=dfa9.loc[(dfa9['Date'] == '31/12/2019')]
+a1=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '31/01/2020')]
+a2=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '28/02/2020')]
+a3=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '31/03/2020')]
+a4=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '30/04/2020')]
+a5=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '29/05/2020')]
+a6=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '30/06/2020')]
+a7=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '31/07/2020')]
+a8=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '31/08/2020')]
+a9=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '30/09/2020')]
+a10=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '30/10/2020')]
+a11=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '30/11/2020')]
+a12=filtered
+filtered=dfa9.loc[(dfa9['Date'] == '31/12/2020')]
+a13=filtered
+
+dfus=pd.DataFrame()
+dfus = dfus.append(a13, ignore_index = True)
+dfus = dfus.append(a12, ignore_index = True)
+dfus = dfus.append(a11, ignore_index = True)
+dfus = dfus.append(a10, ignore_index = True)
+dfus = dfus.append(a9, ignore_index = True)
+dfus = dfus.append(a8, ignore_index = True)
+dfus = dfus.append(a7, ignore_index = True)
+dfus = dfus.append(a6, ignore_index = True)
+dfus = dfus.append(a5, ignore_index = True)
+dfus = dfus.append(a4, ignore_index = True)
+dfus = dfus.append(a3, ignore_index = True)
+dfus = dfus.append(a2, ignore_index = True)
+dfus = dfus.append(a1, ignore_index = True)
+
+dfus2=dfus.drop(['Stock_A',
+'Stock_B',
+'Stock_C',
+'Stock_D',
+'Stock_E',
+'Stock_F',
+'Stock_G',
+'Stock_H',
+'Stock_I',
+'Stock_J',
+'max',
+'segcolu',
+'tercolu'
+], axis = 1) 
+
+##Creating and rearranging monthly dataframes using only stocks identified in dfus2. For example, J,E,G were the 3 highest prices at Jan 31st, hence they are the only stocks selected for the whole next month (Feb). This happens every beginnig of a new month.
+
+denero=dfa9[2:25]
+
+denero_fin=denero.drop(['Stock_A',
+
+'Stock_D',
+
+'Stock_F',
+'Stock_G',
+'Stock_E',
+
+'Stock_I',
+'Stock_J',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+dffinalene3=denero_fin.rename({'Stock_B':'First','Stock_C':'Second','Stock_H':'Third'},axis=1)
+
+dfebrero=dfa9[25:45]
+dfebrero
+dfebrero_fin=dfebrero.drop(['Stock_A',
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_C',
+'Stock_H',
+'Stock_I',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'], axis = 1) 
+
+dfebrero_fin
+poste=dfebrero_fin.columns.tolist()
+#poste
+#colsfeb = dfebrero_fin.columns.tolist()
+poste2 = poste[0],poste[3],poste[1],poste[2]
+poste3=dfebrero_fin.loc[:, poste2]
+poste4=poste3.rename({'Stock_J':'First','Stock_E':'Second','Stock_G':'Third'},axis=1)
+
+dmarzo=dfa9[45:67]
+
+dmarzo_fin=dmarzo.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_C',
+'Stock_H',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsmar = dmarzo_fin.columns.tolist()
+colamar = colsmar[0],colsmar[2], colsmar[1], colsmar[3]
+dffinalmar2=dmarzo_fin.loc[:, colamar]
+dffinalmar3=dffinalmar2.rename({'Stock_G':'First','Stock_A':'Second','Stock_I':'Third'},axis=1)
+
+
+dabril=dfa9[67:89]
+
+dabril_fin=dabril.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_A',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsabr = dabril_fin.columns.tolist()
+colaabr = colsabr[0],colsabr[3], colsabr[1], colsabr[2]
+dffinalabr2=dabril_fin.loc[:, colaabr]
+dffinalabr3=dffinalabr2.rename({'Stock_H':'First','Stock_C':'Second','Stock_G':'Third'},axis=1)
+
+dmayo=dfa9[89:110]
+
+dmayo_fin=dmayo.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsmay = dmayo_fin.columns.tolist()
+colamay = colsmay[0],colsmay[3], colsmay[2], colsmay[1]
+dffinalmay2=dmayo_fin.loc[:, colamay]
+dffinalmay3=dffinalmay2.rename({'Stock_H':'First','Stock_C':'Second','Stock_A':'Third'},axis=1)
+
+djunio=dfa9[110:132]
+
+djunio_fin=djunio.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsjun = djunio_fin.columns.tolist()
+colajun = colsjun[0],colsjun[2], colsjun[3], colsjun[1]
+dffinaljun2=djunio_fin.loc[:, colajun]
+dffinaljun3=dffinaljun2.rename({'Stock_C':'First','Stock_H':'Second','Stock_A':'Third'},axis=1)
+
+djulio=dfa9[132:155]
+
+djulio_fin=djulio.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsjul = djulio_fin.columns.tolist()
+colajul = colsjul[0],colsjul[2], colsjul[1], colsjul[3]
+dffinaljul2=djulio_fin.loc[:, colajul]
+dffinaljul3=dffinaljul2.rename({'Stock_C':'First','Stock_A':'Second','Stock_H':'Third'},axis=1)
+
+dagosto=dfa9[155:176]
+
+dagosto_fin=dagosto.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsago = dagosto_fin.columns.tolist()
+colaago = colsago[0],colsago[2], colsago[1], colsago[3]
+dffinalago2=dagosto_fin.loc[:, colaago]
+dffinalago3=dffinalago2.rename({'Stock_C':'First','Stock_A':'Second','Stock_H':'Third'},axis=1)
+
+dseptiembre=dfa9[176:198]
+
+dseptiembre_fin=dseptiembre.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colssep = dseptiembre_fin.columns.tolist()
+colasep = colssep[0],colssep[2], colssep[1], colssep[3]
+dffinalsep2=dseptiembre_fin.loc[:, colasep]
+dffinalsep3=dffinalsep2.rename({'Stock_C':'First','Stock_A':'Second','Stock_H':'Third'},axis=1)
+
+doctubre=dfa9[198:220]
+
+doctubre_fin=doctubre.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsoct = doctubre_fin.columns.tolist()
+colaoct = colsoct[0],colsoct[2], colsoct[3], colsoct[1]
+dffinaloct2=doctubre_fin.loc[:, colaoct]
+dffinaloct3=dffinaloct2.rename({'Stock_C':'First','Stock_H':'Second','Stock_A':'Third'},axis=1)
+
+dnoviembre=dfa9[220:241]
+
+dnoviembre_fin=dnoviembre.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_A',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsnov = dnoviembre_fin.columns.tolist()
+colanov = colsnov[0],colsnov[1], colsnov[3], colsnov[2]
+dffinalnov2=dnoviembre_fin.loc[:, colanov]
+dffinalnov3=dffinalnov2.rename({'Stock_C':'First','Stock_H':'Second','Stock_E':'Third'},axis=1)
+
+ddiciembre=dfa9[241:273]
+
+ddiciembre_fin=ddiciembre.drop([
+'Stock_B',
+
+'Stock_D',
+
+'Stock_F',
+
+'Stock_I',
+'Stock_G',
+'Stock_J',
+'Stock_E',
+'max',
+'segcolu',
+'tercolu',
+'maxcolu',
+'segcolumna',
+'tercolumna'             
+                       
+], axis = 1) 
+
+colsdec = ddiciembre_fin.columns.tolist()
+coladec = colsdec[0],colsdec[2], colsdec[1], colsdec[3]
+dffinaldec2=ddiciembre_fin.loc[:, coladec]
+dffinaldec3=dffinaldec2.rename({'Stock_C':'First','Stock_A':'Second','Stock_H':'Third'},axis=1)
+
+#Combining all monthly dataframes into one for all dates and columns with Higest, Second and Third stocks.
+
+dcasi1=dffinalene3.append(poste4)
+decasi2=dcasi1.append(dffinalmar3)
+decasi3=decasi2.append(dffinalabr3)
+decasi4=decasi3.append(dffinalmay3)
+decasi5=decasi4.append(dffinaljun3)
+decasi6=decasi5.append(dffinaljul3)
+decasi7=decasi6.append(dffinalago3)
+decasi8=decasi7.append(dffinalsep3)
+decasi9=decasi8.append(dffinaloct3)
+decasi10=decasi9.append(dffinalnov3)
+decasi11=decasi10.append(dffinaldec3)
+
+##Moedl##
+# in matrix2 we have the weights we will give to each security: 50% to the highest and 25% for the second and third.
+
+matrix2 = [(0.5),
+
+           (0.25),
+
+           (0.25)]
+
+##Transsforming decasi11 and matrix2 into matrices that can be multiplied to obtain index levels. 
+##Final_dataset5 contains dates and final index levels.
+
+WeightMatrix = pd.DataFrame(data=matrix2)
+decasi12=decasi11.drop(['Date'],axis=1)
+IndexMatrix =pd.DataFrame(decasi12)
+import numpy as np
+Final_index=np.dot(IndexMatrix,WeightMatrix)
+type(Final_index)
+Fin=pd.DataFrame()
+pued=list(Final_index)
+
+contador=0
+aber=[]
+for i in Final_index:
+    proba=np.asscalar(i)
+    aber.append(proba)
+    contador=contador+1
+series = pd.Series(aber)
+Final_dataset=pd.DataFrame()
+Final_dataset2=Final_dataset.append(aber)
+
+fecha=[]
+contar=0
+for i in decasi11['Date']:
+    fecha.append(i)
+    contar=contar+1
+fecha
+series2 = pd.Series(fecha)
+series3=series2.T
+series3.name = "Dates"
+Final_dataset3=Final_dataset2.assign(Dates=series3)
+colsfinal = Final_dataset3.columns.tolist()
+colafinal = colsfinal[1],colsfinal[0]
+Final_dataset4=Final_dataset3.loc[:, colafinal]
+Final_dataset5=Final_dataset4.rename({0:'Index Levels'},axis=1)
+
+
+##Sending to CSV
+Final_dataset5.to_csv('Final_index_levels_2.csv',index=False, header=True) 
